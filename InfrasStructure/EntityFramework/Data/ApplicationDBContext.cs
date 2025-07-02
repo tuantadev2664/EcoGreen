@@ -1,10 +1,11 @@
 ﻿using Application.Entities.Base;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InfrasStructure.EntityFramework.Data
 {
-    public class ApplicationDBContext : IdentityDbContext
+    public class ApplicationDBContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
             : base(options)
