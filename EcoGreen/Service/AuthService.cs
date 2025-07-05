@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Entities.Base;
+﻿using Application.Entities.Base;
 using Application.Entities.DTOs.User;
 using Application.Interface.IRepositories;
 using Application.Interface.IServices;
 using Application.Response;
-using EcoGreen.Service;
-using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace EcoGreen.Services
 {
@@ -59,7 +52,7 @@ namespace EcoGreen.Services
 
         }
 
-        public async Task<APIResponse> RegisterAsync(UserRegisterDTO model)
+        public async Task<APIResponse> RegisterAsync(UserRegisterDTO model, string PhotoUrl)
         {
             var response = new APIResponse();
 
@@ -92,6 +85,7 @@ namespace EcoGreen.Services
             {
                 UserName = model.Username,
                 Email = model.Email,
+                ProfilePhotoUrl = PhotoUrl,
             };
 
             var identityResult = await _authRepository.CreateUserAsync(user, model.Password);

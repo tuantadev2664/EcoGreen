@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Entities.Base;
+﻿using Application.Entities.Base;
 using Application.Interface;
 using Application.Interface.IServices;
-using InfrasStructure.Services;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EcoGreen.Service
 {
