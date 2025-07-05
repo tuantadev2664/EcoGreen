@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Application.Entities.Base;
+﻿using Application.Entities.Base;
 using Application.Interface;
 using Application.Interface.IRepositories;
 using Application.Interface.IServices;
@@ -10,12 +9,12 @@ using EcoGreen.Service;
 using EcoGreen.Services;
 using InfrasStructure.EntityFramework.Data;
 using InfrasStructure.EntityFramework.Repository;
-using InfrasStructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +72,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
@@ -84,7 +84,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapScalarApiReference(options =>
     options
-    .WithTitle("Movie API")
+    .WithTitle("EcoGreen API")
     .WithTheme(ScalarTheme.BluePlanet)
     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
     );

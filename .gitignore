@@ -25,4 +25,4 @@
 *.tsbuildinfo
 
 // Migrations
-Infrastructure/Migrations
+Migrations

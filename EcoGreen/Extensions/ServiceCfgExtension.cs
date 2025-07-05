@@ -11,6 +11,7 @@ namespace EcoGreen.Extensions
         {
             services.AddScoped<ICompanyFormService, CompanyFormService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<CloudinaryService>();
 
             return services;
         }
