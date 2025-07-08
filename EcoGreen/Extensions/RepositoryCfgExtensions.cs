@@ -8,6 +8,7 @@ namespace EcoGreen.Extensions
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
             services.AddScoped<ICompanyFormRepository, CompanyFormRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
             return services;
         }
     }

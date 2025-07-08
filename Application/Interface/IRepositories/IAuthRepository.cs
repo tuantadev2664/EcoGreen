@@ -11,6 +11,7 @@ namespace Application.Interface.IRepositories
     public interface IAuthRepository
     {
         Task<IdentityResult> CreateUserAsync(User user, string password);
+        Task<IdentityResult> CreateAsync(User user);
         Task<IdentityResult> AddRolesAsync(User user, string[] roles);
         Task<User?> FindByEmailAsync(string email);
         Task<User?> FindByIdAsync(string userId);

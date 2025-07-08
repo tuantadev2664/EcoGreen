@@ -2,6 +2,7 @@
 using Application.Interface.IServices;
 using EcoGreen.Helpers;
 using EcoGreen.Service;
+using EcoGreen.Services;
 
 namespace EcoGreen.Extensions
 {
@@ -11,6 +12,8 @@ namespace EcoGreen.Extensions
         {
             services.AddScoped<ICompanyFormService, CompanyFormService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddSingleton<CloudinaryService>();
             //services.AddSingleton<AIChatService>();
 

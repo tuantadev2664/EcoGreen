@@ -1,9 +1,14 @@
-﻿using Application.Entities.Base;
+﻿using System.Security.Claims;
+using Application.Entities.Base;
 using Application.Entities.DTOs.User;
 using Application.Interface.IServices;
+using Application.Request.User;
 using AutoMapper;
 using EcoGreen.Service;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcoGreen.Controllers
 {
@@ -61,6 +66,29 @@ namespace EcoGreen.Controllers
                 return Ok(response);
             }
             return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpPost("google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            var payload = await VerifyGoogleTokenAsync(request.tokenId);
+            if (payload == null)
+            {
+                return BadRequest("Invalid Google token");
+            }
+            var response = await _authService.GoogleLoginAsync(payload);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return StatusCode((int)response.StatusCode, response);
+
+        }
+
+        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string token)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings();
+            return await GoogleJsonWebSignature.ValidateAsync(token, settings);
         }
     }
 }
