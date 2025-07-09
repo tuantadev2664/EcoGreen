@@ -28,6 +28,9 @@ namespace InfrasStructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("AmountOfPeople")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("CreatedByCompanyId")
                         .HasColumnType("uuid");
 

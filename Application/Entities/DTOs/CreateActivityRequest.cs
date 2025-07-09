@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace Application.Entities.Base
+namespace Application.Entities.DTOs
 {
-    public class Activity
+    public class CreateActivityRequest
     {
-        [Key]
-        public Guid ActivityId { get; set; }
-
         [Required(ErrorMessage = "Title is required.")]
         [StringLength(100, ErrorMessage = "Title can't exceed 100 characters.")]
         public string Title { get; set; }
@@ -18,8 +14,8 @@ namespace Application.Entities.Base
 
         [Required(ErrorMessage = "Location is required.")]
         [StringLength(200, ErrorMessage = "Location can't exceed 200 characters.")]
-
         public string Location { get; set; }
+
         [Required(ErrorMessage = "Amount of people is required.")]
         public int AmountOfPeople { get; set; }
 
@@ -29,9 +25,6 @@ namespace Application.Entities.Base
         [Required]
         public Guid CreatedByCompanyId { get; set; }
 
-        [ForeignKey(nameof(CreatedByCompanyId))]
-        public virtual User CompanyUser { get; set; }
-
         public bool IsApproved { get; set; }
     }
-}
+} 
