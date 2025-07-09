@@ -15,7 +15,7 @@ namespace EcoGreen.Helpers
             // CreateMap<Order, OrderDto>();
             // etc.
             CreateMap<UserRegisterDTO, User>()
-     .ForMember(user => user.UserName, opt => opt.MapFrom(userRegis => userRegis.Username))
+     .ForMember(user => user.UserName, opt => opt.MapFrom(userRegis => userRegis.name))
      .ForMember(user => user.Email, opt => opt.MapFrom(userRegis => userRegis.Email))
      .ForMember(user => user.ProfilePhotoUrl, opt => opt.Ignore());
 

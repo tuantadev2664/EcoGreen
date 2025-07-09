@@ -29,6 +29,12 @@ namespace InfrasStructure.EntityFramework.Repository
             return result;
         }
 
+        public async Task<IdentityResult> CreateAsync(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            var result = await _userManager.CreateAsync(user);
+            return result;
+        }
         
 
         public async Task<User?> FindByEmailAsync(string email)

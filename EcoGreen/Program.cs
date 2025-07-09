@@ -67,16 +67,25 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173") // Thay đúng port frontend
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
+});
+
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
+// Thêm vào pipeline
+app.UseCors("AllowFrontend");
 
 
 // Configure the HTTP request pipeline.
