@@ -1,4 +1,5 @@
 ﻿using Application.Entities.Base;
+using Application.Entities.Base.Post;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,10 @@ namespace InfrasStructure.EntityFramework.Data
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Share> Shares { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +62,62 @@ namespace InfrasStructure.EntityFramework.Data
                 .WithMany()
                 .HasForeignKey(a => a.CreatedByCompanyId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Post>()
+     .HasOne(p => p.User)
+     .WithMany(u => u.Posts)
+     .HasForeignKey(p => p.UserId)
+     .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.User)
+                .WithMany(u => u.Likes)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Like>()
+                .HasIndex(l => new { l.UserId, l.PostId })
+                .IsUnique();
+
+
+            modelBuilder.Entity<Share>()
+                .HasOne(s => s.User)
+                .WithMany(u => u.Shares)
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Share>()
+                .HasOne(s => s.Post)
+                .WithMany(p => p.Shares)
+                .HasForeignKey(s => s.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Share>()
+                .HasIndex(s => new { s.UserId, s.PostId })
+                .IsUnique();
         }
     }
 }
