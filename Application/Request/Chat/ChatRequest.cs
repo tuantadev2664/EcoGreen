@@ -1,4 +1,4 @@
-﻿using Application.Entities.Base;
+﻿using Application.Entities.Base.AIChat;
 
 namespace Application.Request.Chat
 {
