@@ -26,6 +26,9 @@ namespace Application.Entities.Base
         [Required(ErrorMessage = "Date is required.")]
         public DateTime Date { get; set; }
 
+        [StringLength(500, ErrorMessage = "Media URL can't exceed 500 characters.")]
+        public string? MediaUrl { get; set; }
+
         [Required]
         public Guid CreatedByCompanyId { get; set; }
 

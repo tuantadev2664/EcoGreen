@@ -1,5 +1,6 @@
 ﻿using Application.Entities.Base;
 using Application.Entities.DTOs;
+using Application.Request.Activity;
 using System.Linq.Expressions;
 
 namespace Application.Interface.IRepositories

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Entities.DTOs
+namespace Application.Request.Activity
 {
     public class ActivitySearchRequest
     {
@@ -32,11 +32,6 @@ namespace Application.Entities.DTOs
         public SortDirection SortDirection { get; set; } = SortDirection.Desc; // Default newest first
     }
 
-    public enum SortDirection
-    {
-        Asc,
-        Desc
-    }
 
     public static class ActivitySortFields
     {
@@ -57,4 +52,4 @@ namespace Application.Entities.DTOs
             return !string.IsNullOrEmpty(field) && ValidFields.Contains(field, StringComparer.OrdinalIgnoreCase);
         }
     }
-} 
+}

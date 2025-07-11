@@ -2,22 +2,23 @@
 using Application.Interface.IServices;
 using EcoGreen.Helpers;
 using EcoGreen.Service;
-using EcoGreen.Services;
 
 namespace EcoGreen.Extensions
 {
     public static class ServiceCfgExtension
     {
-        public static IServiceCollection AddService(this IServiceCollection services)
+        public static IServiceCollection AddService(this IServiceCollection Services)
         {
-            services.AddScoped<ICompanyFormService, CompanyFormService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddSingleton<CloudinaryService>();
-            //services.AddSingleton<AIChatService>();
+            Services.AddScoped<ICompanyFormService, CompanyFormService>();
+            Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddSingleton<CloudinaryService>();
+            Services.AddScoped<IPostService, PostService>();
+            Services.AddScoped<ILikeService, LikeService>();
+            Services.AddScoped<ICommentService, CommentService>();
+            Services.AddScoped<IShareService, ShareService>();
+            //Services.AddSingleton<AIChatService>();
 
-            return services;
+            return Services;
         }
     }
 }

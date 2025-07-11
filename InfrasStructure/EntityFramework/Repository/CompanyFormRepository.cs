@@ -2,6 +2,8 @@
 using Application.Entities.DTOs;
 using Application.Interface;
 using Application.Interface.IRepositories;
+using Application.Request;
+using Application.Request.Activity;
 using InfrasStructure.EntityFramework.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -112,9 +114,9 @@ namespace InfrasStructure.EntityFramework.Repository
                 .ToListAsync();
 
             return PagedResult<Activity>.Create(
-                activities, 
-                totalRecords, 
-                request.Page, 
+                activities,
+                totalRecords,
+                request.Page,
                 request.PageSize,
                 request.SearchTerm,
                 request.SortBy,
@@ -128,11 +130,11 @@ namespace InfrasStructure.EntityFramework.Repository
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var searchTerm = request.SearchTerm.ToLower();
-                query = query.Where(a => 
+                query = query.Where(a =>
                     a.Title.ToLower().Contains(searchTerm) ||
                     a.Description.ToLower().Contains(searchTerm) ||
                     a.Location.ToLower().Contains(searchTerm) ||
-                    a.CompanyUser.FullName.ToLower().Contains(searchTerm)
+                    a.CompanyUser.UserName.ToLower().Contains(searchTerm)
                 );
             }
 
