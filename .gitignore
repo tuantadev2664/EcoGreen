@@ -25,4 +25,4 @@
 *.tsbuildinfo
 
 // Migrations
-Migrations
+InfasStructure/Migrations

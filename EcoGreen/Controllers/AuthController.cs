@@ -1,14 +1,11 @@
-﻿using System.Security.Claims;
-using Application.Entities.Base;
+﻿using Application.Entities.Base;
 using Application.Entities.DTOs.User;
 using Application.Interface.IServices;
 using Application.Request.User;
 using AutoMapper;
 using EcoGreen.Service;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcoGreen.Controllers
 {
@@ -24,7 +21,6 @@ namespace EcoGreen.Controllers
             _mapper = mapper;
         }
 
-        // POST: /api/auth/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] UserRegisterDTO registerModel, IFormFile? imageFile,
             [FromServices] CloudinaryService cloudinaryService)
@@ -36,13 +32,12 @@ namespace EcoGreen.Controllers
             var user = _mapper.Map<User>(registerModel);
             if (imageFile != null && imageFile.Length > 0)
             {
-                // Upload the image to Cloudinary and get the URL
                 var imageUrl = await cloudinaryService.UploadImageAsync(imageFile);
-                user.ProfilePhotoUrl = imageUrl; // Assuming UserRegisterDTO has an ImageUrl property
+                user.ProfilePhotoUrl = imageUrl;
             }
             else
             {
-                user.ProfilePhotoUrl = "/Helpers/profile_base.jpg"; // Set to null if no image is provided
+                user.ProfilePhotoUrl = "/Helpers/profile_base.jpg";
             }
             var response = await _authService.RegisterAsync(registerModel, user.ProfilePhotoUrl);
             if (response.isSuccess)

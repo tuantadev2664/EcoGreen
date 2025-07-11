@@ -1,7 +1,8 @@
-﻿using Application.Entities.Base;
+﻿using Application.Entities.Base.Post;
 using Application.Interface.IRepositories;
 using Application.Interface.IServices;
 using Application.Request.Activity;
+using Application.Request.Post;
 using Application.Response;
 using Common.Error;
 using System.Linq.Expressions;
@@ -9,34 +10,33 @@ using System.Net;
 
 namespace EcoGreen.Service
 {
-    public class CompanyFormService : ICompanyFormService
+    public class PostService : IPostService
     {
-        private readonly ICompanyFormRepository _companyFormRepository;
+        private readonly IPostRepository _postRepository;
 
-        public CompanyFormService(ICompanyFormRepository companyFormRepository)
+        public PostService(IPostRepository postRepository)
         {
-            _companyFormRepository = companyFormRepository;
+            _postRepository = postRepository;
         }
 
-        public async Task<APIResponse> CreateActivityForm(Activity activityForm)
+        public async Task<APIResponse> CreatePost(Post Post)
         {
             var response = new APIResponse();
 
             try
             {
-                // Validate that the company user exists
-                var companyUser = await _companyFormRepository.GetUserById(activityForm.CreatedByCompanyId);
+                var companyUser = await _postRepository.GetUserById(Post.UserId);
                 if (companyUser == null)
                 {
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.isSuccess = false;
-                    response.ErrorMessages.Add($"Company user with ID {activityForm.CreatedByCompanyId} not found.");
+                    response.ErrorMessages.Add($"User with ID {Post.UserId} not found.");
                     return response;
                 }
 
-                await _companyFormRepository.CreateActivityForm(activityForm);
+                await _postRepository.CreatePost(Post);
 
-                response.Result = "Form created successfully";
+                response.Result = "Post created successfully";
                 response.StatusCode = HttpStatusCode.OK;
                 response.isSuccess = true;
             }
@@ -52,13 +52,13 @@ namespace EcoGreen.Service
             return response;
         }
 
-        public async Task<APIResponse> DeleteActivityForm(Guid activityId)
+        public async Task<APIResponse> DeletePost(Guid activityId)
         {
             var response = new APIResponse();
             try
             {
-                await _companyFormRepository.DeleteActivityForm(activityId);
-                response.Result = "Form deleted successfully";
+                await _postRepository.DeletePost(activityId);
+                response.Result = "Post deleted successfully";
                 response.StatusCode = HttpStatusCode.OK;
                 response.isSuccess = true;
             }
@@ -81,12 +81,83 @@ namespace EcoGreen.Service
             return response;
         }
 
-        public async Task<APIResponse> GetActivityFormBy(Expression<Func<Activity, bool>> predicate)
+        public async Task<APIResponse> GetAllPosts()
         {
             var response = new APIResponse();
             try
             {
-                var result = await _companyFormRepository.GetActivityFormBy(predicate);
+                var result = await _postRepository.GetAllPost();
+                response.Result = result;
+                response.StatusCode = HttpStatusCode.OK;
+                response.isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
+
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.isSuccess = false;
+                response.ErrorMessages.Add(error.Message);
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllPostsBy(Expression<Func<Post, bool>> predicate)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var result = await _postRepository.GetAllPostBy(predicate);
+                response.Result = result;
+                response.StatusCode = HttpStatusCode.OK;
+                response.isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
+
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.isSuccess = false;
+                response.ErrorMessages.Add(error.Message);
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetAllPostsWithSearchAndSort(PostSearchRequest request)
+        {
+            var response = new APIResponse();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(request.SortBy) && !ActivitySortFields.IsValidSortField(request.SortBy))
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.isSuccess = false;
+                    response.ErrorMessages.Add($"Invalid sort field '{request.SortBy}'. Valid fields are: {string.Join(", ", ActivitySortFields.ValidFields)}");
+                    return response;
+                }
+
+                var result = await _postRepository.GetAllPostWithSearchAndSort(request);
+                response.Result = result;
+                response.StatusCode = HttpStatusCode.OK;
+                response.isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
+
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.isSuccess = false;
+                response.ErrorMessages.Add(error.Message);
+            }
+            return response;
+        }
+
+        public async Task<APIResponse> GetPostBy(Expression<Func<Post, bool>> predicate)
+        {
+            var response = new APIResponse();
+            try
+            {
+                var result = await _postRepository.GetPostBy(predicate);
                 if (result is null)
                 {
                     response.StatusCode = HttpStatusCode.NotFound;
@@ -111,25 +182,26 @@ namespace EcoGreen.Service
             return response;
         }
 
-        public async Task<APIResponse> GetActivityFormById(Guid activityId)
+        public async Task<APIResponse> GetPostById(Guid postId)
         {
             var response = new APIResponse();
             try
             {
-                var result = await _companyFormRepository.GetActivityFormById(activityId);
-                if(result is null)
+                var result = await _postRepository.GetPostById(postId);
+                if (result is null)
                 {
                     response.StatusCode = HttpStatusCode.NotFound;
                     response.isSuccess = false;
                     response.ErrorMessages.Add("Not Found");
-                } else
+                }
+                else
                 {
                     response.Result = result;
                     response.StatusCode = HttpStatusCode.OK;
                     response.isSuccess = true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
 
@@ -140,85 +212,13 @@ namespace EcoGreen.Service
             return response;
         }
 
-        public async Task<APIResponse> GetAllActivityForms()
+        public async Task<APIResponse> UpdatePost(Post Post)
         {
             var response = new APIResponse();
             try
             {
-                var result = await _companyFormRepository.GetAllActivityForms();
-                response.Result = result;
-                response.StatusCode = HttpStatusCode.OK;
-                response.isSuccess = true;
-            }
-            catch(Exception ex)
-            {
-                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
-
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.isSuccess = false;
-                response.ErrorMessages.Add(error.Message);
-            }
-            return response;
-        }
-
-        public async Task<APIResponse> GetAllActivityFormsWithSearchAndSort(ActivitySearchRequest request)
-        {
-            var response = new APIResponse();
-            try
-            {
-                // Validate sort field
-                if (!string.IsNullOrWhiteSpace(request.SortBy) && !ActivitySortFields.IsValidSortField(request.SortBy))
-                {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.isSuccess = false;
-                    response.ErrorMessages.Add($"Invalid sort field '{request.SortBy}'. Valid fields are: {string.Join(", ", ActivitySortFields.ValidFields)}");
-                    return response;
-                }
-
-                var result = await _companyFormRepository.GetAllActivityFormsWithSearchAndSort(request);
-                response.Result = result;
-                response.StatusCode = HttpStatusCode.OK;
-                response.isSuccess = true;
-            }
-            catch(Exception ex)
-            {
-                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
-
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.isSuccess = false;
-                response.ErrorMessages.Add(error.Message);
-            }
-            return response;
-        }
-
-        public async Task<APIResponse> GetAllActivityFormsBy(Expression<Func<Activity, bool>> predicate)
-        {
-            var response = new APIResponse();
-            try
-            {
-                var result = await _companyFormRepository.GetAllActivityFormsBy(predicate);
-                response.Result = result;
-                response.StatusCode = HttpStatusCode.OK;
-                response.isSuccess = true;
-            }
-            catch(Exception ex)
-            {
-                var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
-
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.isSuccess = false;
-                response.ErrorMessages.Add(error.Message);
-            }
-            return response;
-        }
-
-        public async Task<APIResponse> UpdateActivityForm(Activity activityForm)
-        {
-            var response = new APIResponse();
-            try
-            {
-                await _companyFormRepository.UpdateActivityForm(activityForm);
-                response.Result = "Form updated successfully.";
+                await _postRepository.UpdatePost(Post);
+                response.Result = "Post updated successfully.";
                 response.StatusCode = HttpStatusCode.OK;
                 response.isSuccess = true;
             }
@@ -229,7 +229,7 @@ namespace EcoGreen.Service
                 response.isSuccess = false;
                 response.ErrorMessages.Add(error.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var error = new APIException((int)HttpStatusCode.BadRequest, ex.Message, ex.StackTrace);
 
@@ -239,5 +239,7 @@ namespace EcoGreen.Service
             }
             return response;
         }
+
+
     }
 }

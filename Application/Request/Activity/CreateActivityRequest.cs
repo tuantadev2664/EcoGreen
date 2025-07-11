@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Entities.DTOs
+namespace Application.Request.Activity
 {
     public class CreateActivityRequest
     {
@@ -27,4 +27,4 @@ namespace Application.Entities.DTOs
 
         public bool IsApproved { get; set; }
     }
-} 
+}

@@ -9,6 +9,10 @@ namespace EcoGreen.Extensions
         {
             services.AddScoped<ICompanyFormRepository, CompanyFormRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ILikeRepository, LikeRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IShareRepository, ShareRepository>();
             return services;
         }
     }
