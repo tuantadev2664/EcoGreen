@@ -2,6 +2,7 @@
 using Application.Interface.IServices;
 using EcoGreen.Helpers;
 using EcoGreen.Service;
+using EcoGreen.Service.Chat;
 
 namespace EcoGreen.Extensions
 {
@@ -16,7 +17,8 @@ namespace EcoGreen.Extensions
             Services.AddScoped<ILikeService, LikeService>();
             Services.AddScoped<ICommentService, CommentService>();
             Services.AddScoped<IShareService, ShareService>();
-            //Services.AddSingleton<AIChatService>();
+            Services.AddScoped<VisionService>();
+            services.AddScoped<AIChatService>();
 
             return Services;
         }
