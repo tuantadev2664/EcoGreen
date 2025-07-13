@@ -1,5 +1,6 @@
 ﻿using Application.Entities.DTOs.User;
 using Application.Response;
+using Google.Apis.Auth;
 
 namespace Application.Interface.IServices
 {
@@ -7,5 +8,6 @@ namespace Application.Interface.IServices
     {
         Task<APIResponse> RegisterAsync(UserRegisterDTO model, string PhotoUrl);
         Task<APIResponse> LoginAsync(UserLoginDTO model);
+        Task<APIResponse> GoogleLoginAsync(GoogleJsonWebSignature.Payload payload);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Entities.Base;
+﻿using Application.Entities.Base.AIChat;
 using Application.Request.Chat;
 using Application.Response.Chat;
 using EcoGreen.Service;

@@ -18,10 +18,16 @@ namespace Application.Entities.Base
 
         [Required(ErrorMessage = "Location is required.")]
         [StringLength(200, ErrorMessage = "Location can't exceed 200 characters.")]
+
         public string Location { get; set; }
+        [Required(ErrorMessage = "Amount of people is required.")]
+        public int AmountOfPeople { get; set; }
 
         [Required(ErrorMessage = "Date is required.")]
         public DateTime Date { get; set; }
+
+        [StringLength(500, ErrorMessage = "Media URL can't exceed 500 characters.")]
+        public string? MediaUrl { get; set; }
 
         [Required]
         public Guid CreatedByCompanyId { get; set; }

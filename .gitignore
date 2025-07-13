@@ -25,6 +25,6 @@
 *.tsbuildinfo
 
 // Migrations
-Migrations
+InfasStructure/Migrations
 
 EcoGreen/Extensions/vision.json

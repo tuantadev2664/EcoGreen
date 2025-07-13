@@ -3,6 +3,7 @@ using Application.Entities.DTOs.User;
 using Application.Interface.IRepositories;
 using Application.Interface.IServices;
 using Application.Response;
+using Google.Apis.Auth;
 using System.Net;
 
 namespace EcoGreen.Services
@@ -22,8 +23,8 @@ namespace EcoGreen.Services
         {
             var response = new APIResponse();
 
-            var user = await _authRepository.FindByUserNameAsync(model.UserName);
-            if (user == null) user = await _authRepository.FindByEmailAsync(model.UserName!);
+            var user = await _authRepository.FindByUserNameAsync(model.Email);
+            if (user == null) user = await _authRepository.FindByEmailAsync(model.Email!);
 
 
             if (user == null || !await _authRepository.CheckPasswordAsync(user, model.Password))
@@ -65,7 +66,7 @@ namespace EcoGreen.Services
                 return response;
             }
 
-            if (await _authRepository.FindByUserNameAsync(model.Username) != null)
+            if (await _authRepository.FindByUserNameAsync(model.name) != null)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
                 response.isSuccess = false;
@@ -83,7 +84,7 @@ namespace EcoGreen.Services
 
             var user = new User
             {
-                UserName = model.Username,
+                UserName = model.name,
                 Email = model.Email,
                 ProfilePhotoUrl = PhotoUrl,
             };
@@ -124,6 +125,44 @@ namespace EcoGreen.Services
             }
         }
 
-
+        public async Task<APIResponse> GoogleLoginAsync(GoogleJsonWebSignature.Payload payload)
+        {
+            var response = new APIResponse();
+            if (payload == null)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.isSuccess = false;
+                response.ErrorMessages.Add("Invalid Google token");
+                return response;
+            }
+            var user = await _authRepository.FindByEmailAsync(payload.Email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    UserName = payload.Email,
+                    Email = payload.Email,
+                    ProfilePhotoUrl = payload.Picture // Assuming Picture is the URL of the user's profile photo
+                };
+                var identityResult = await _authRepository.CreateUserAsync(user, Guid.NewGuid().ToString());
+                if (!identityResult.Succeeded)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.isSuccess = false;
+                    response.ErrorMessages.AddRange(identityResult.Errors.Select(e => e.Description));
+                    return response;
+                }
+            }
+            var roles = await _authRepository.GetRolesAsync(user);
+            if (roles == null || !roles.Any())
+            {
+                roles = new List<string> { "User" }; // Default role if none assigned
+            }
+            var token = _tokenService.GenerateJwtToken(user, roles.ToList());
+            response.StatusCode = HttpStatusCode.OK;
+            response.isSuccess = true;
+            response.Result = new AuthResponse { Token = token, UserId = user.Id, UserName = user.UserName, Email = user.Email };
+            return response;
+        }
     }
 }

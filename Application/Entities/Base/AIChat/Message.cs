@@ -1,4 +1,4 @@
-﻿namespace Application.Entities.Base
+﻿namespace Application.Entities.Base.AIChat
 {
     public class Message
     {

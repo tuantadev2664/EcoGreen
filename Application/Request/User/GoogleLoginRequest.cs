@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfrasStructure.EntityFramework.Repository
+namespace Application.Request.User
 {
-    internal class temp
+    public class GoogleLoginRequest
     {
+        public string tokenId { get; set; }
     }
 }

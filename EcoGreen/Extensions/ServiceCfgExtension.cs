@@ -8,15 +8,19 @@ namespace EcoGreen.Extensions
 {
     public static class ServiceCfgExtension
     {
-        public static IServiceCollection AddService(this IServiceCollection services)
+        public static IServiceCollection AddService(this IServiceCollection Services)
         {
-            services.AddScoped<ICompanyFormService, CompanyFormService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddSingleton<CloudinaryService>();
-            services.AddScoped<VisionService>();
+            Services.AddScoped<ICompanyFormService, CompanyFormService>();
+            Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddSingleton<CloudinaryService>();
+            Services.AddScoped<IPostService, PostService>();
+            Services.AddScoped<ILikeService, LikeService>();
+            Services.AddScoped<ICommentService, CommentService>();
+            Services.AddScoped<IShareService, ShareService>();
+            Services.AddScoped<VisionService>();
             services.AddScoped<AIChatService>();
 
-            return services;
+            return Services;
         }
     }
 }
