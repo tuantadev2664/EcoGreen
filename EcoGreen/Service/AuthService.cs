@@ -121,30 +121,20 @@ namespace EcoGreen.Services
                 return response;
             }
 
-            if (model.Roles != null && model.Roles.Any())
-            {
-                var roleResult = await _authRepository.AddRolesAsync(user, model.Roles);
+            var roleResult = await _authRepository.AddRolesAsync(user, new string[] { "User" });
 
-                if (!roleResult.Succeeded)
-                {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                    response.isSuccess = false;
-                    response.ErrorMessages.AddRange(roleResult.Errors.Select(e => e.Description));
-                    return response;
-                }
-
-                response.StatusCode = HttpStatusCode.OK;
-                response.isSuccess = true;
-                response.Result = "User registered successfully";
-                return response;
-            }
-            else
+            if (!roleResult.Succeeded)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
                 response.isSuccess = false;
-                response.ErrorMessages.Add("At least one role must be assigned to the user");
+                response.ErrorMessages.AddRange(roleResult.Errors.Select(e => e.Description));
                 return response;
             }
+
+            response.StatusCode = HttpStatusCode.OK;
+            response.isSuccess = true;
+            response.Result = "User registered successfully";
+            return response;
         }
 
         public async Task<APIResponse> GoogleLoginAsync(GoogleJsonWebSignature.Payload payload)
@@ -162,16 +152,26 @@ namespace EcoGreen.Services
             {
                 user = new User
                 {
-                    UserName = payload.Email,
+                    UserName = payload.Name,
                     Email = payload.Email,
                     ProfilePhotoUrl = payload.Picture // Assuming Picture is the URL of the user's profile photo
                 };
-                var identityResult = await _authRepository.CreateUserAsync(user, Guid.NewGuid().ToString());
+                var identityResult = await _authRepository.CreateAsync(user);
                 if (!identityResult.Succeeded)
                 {
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.isSuccess = false;
                     response.ErrorMessages.AddRange(identityResult.Errors.Select(e => e.Description));
+                    return response;
+                }
+
+                var roleResult = await _authRepository.AddRolesAsync(user, new string[] { "User" });
+
+                if (!roleResult.Succeeded)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.isSuccess = false;
+                    response.ErrorMessages.AddRange(roleResult.Errors.Select(e => e.Description));
                     return response;
                 }
             }
