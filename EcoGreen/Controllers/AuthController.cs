@@ -85,5 +85,15 @@ namespace EcoGreen.Controllers
             var settings = new GoogleJsonWebSignature.ValidationSettings();
             return await GoogleJsonWebSignature.ValidateAsync(token, settings);
         }
+        [HttpGet("get-user/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var user = await _authService.FindUserById(id);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
     }
 }

@@ -47,7 +47,29 @@ namespace EcoGreen.Services
 
                 response.StatusCode = HttpStatusCode.OK;
                 response.isSuccess = true;
-                response.Result = new AuthResponse { Token = token, UserId = user.Id, UserName = user.UserName, Email = user.Email };
+                response.Result = new AuthResponse { Token = token, UserId = user.Id, UserName = user.UserName, Email = user.Email, ProfilePhotoUrl = user.ProfilePhotoUrl };
+                return response;
+            }
+
+        }
+
+        public async Task<APIResponse> FindUserById(string id)
+        {
+            var response = new APIResponse();
+
+            var user = await _authRepository.FindByIdAsync(id);
+            if (user == null)
+            {
+                response.StatusCode = HttpStatusCode.Unauthorized;
+                response.isSuccess = false;
+                response.ErrorMessages.Add("Invalid username or password");
+                return response;
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                response.isSuccess = true;
+                response.Result = user;
                 return response;
             }
 

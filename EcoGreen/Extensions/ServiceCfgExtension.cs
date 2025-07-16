@@ -18,7 +18,7 @@ namespace EcoGreen.Extensions
             Services.AddScoped<ICommentService, CommentService>();
             Services.AddScoped<IShareService, ShareService>();
             Services.AddScoped<VisionService>();
-            services.AddScoped<AIChatService>();
+            Services.AddScoped<AIChatService>();
 
             return Services;
         }

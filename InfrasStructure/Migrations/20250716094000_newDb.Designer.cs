@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InfrasStructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250711112006_addMediaUrlToActivity")]
-    partial class addMediaUrlToActivity
+    [Migration("20250716094000_newDb")]
+    partial class newDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
