@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Response
+﻿namespace Application.Response
 {
     public class AuthResponse
     {
@@ -12,5 +6,6 @@ namespace Application.Response
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public string ProfilePhotoUrl { get; set; } = string.Empty;
     }
 }

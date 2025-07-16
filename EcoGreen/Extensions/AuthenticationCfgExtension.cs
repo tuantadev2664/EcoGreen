@@ -20,8 +20,7 @@ namespace EcoGreen.Extensions
 
             services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
-                options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ àáạãảâầấậẫẩăằắặẵẳèéẹẽẻêềếệễểìíịĩỉòóọõỏôồốộỗổơờớợỡởùúụũủưừứựữửỳýỵỹỷđĐ ";
+                options.User.AllowedUserNameCharacters = null;
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireLowercase = false;
@@ -29,8 +28,8 @@ namespace EcoGreen.Extensions
                 options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = false;
             })
-    .AddEntityFrameworkStores<ApplicationDBContext>()
-    .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDBContext>()
+            .AddDefaultTokenProviders();
 
             // JWT Auth Setup
             services.AddAuthentication(options =>
