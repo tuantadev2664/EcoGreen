@@ -29,4 +29,10 @@
     <ProjectReference Include="..\InfrasStructure\InfrasStructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Extensions\vision.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
