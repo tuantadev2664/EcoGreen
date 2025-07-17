@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=build /app/out ./
 
 # Copy vision.json vào đúng vị trí nếu dùng trực tiếp
-COPY EcoGreen/Extensions/vision.json /app/Extensions/vision.json
+# COPY EcoGreen/Extensions/vision.json /app/Extensions/vision.json
 
 # Mở cổng
 EXPOSE 8080
