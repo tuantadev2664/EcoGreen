@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
-var envPath = Path.Combine("..", ".env");
-DotNetEnv.Env.Load(envPath);
+// var envPath = Path.Combine("..", ".env");
+// DotNetEnv.Env.Load(envPath);
 
 // Add services to the container.
 configuration.AddEnvironmentVariables();
