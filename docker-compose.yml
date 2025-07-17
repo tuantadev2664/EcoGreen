@@ -1,0 +1,11 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080" # nếu backend lắng nghe trên cổng 5000
+    volumes:
+      - ./EcoGreen/Extensions:/app/Extensions

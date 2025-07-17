@@ -34,7 +34,3 @@ EcoGreen/Extensions/vision.json
 .env.*
 appsettings.*.json
 
-# Ignore Docker-related files
-Dockerfile
-docker-compose.yml
-.dockerignore
