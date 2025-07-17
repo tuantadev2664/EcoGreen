@@ -12,9 +12,6 @@ ConfigurationManager configuration = builder.Configuration;
 
 var envPath = Path.Combine("..", ".env");
 DotNetEnv.Env.Load(envPath);
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
-// Đặt breakpoint ở dòng dưới
-var test = jwtSecret;
 
 // Add services to the container.
 configuration.AddEnvironmentVariables();
