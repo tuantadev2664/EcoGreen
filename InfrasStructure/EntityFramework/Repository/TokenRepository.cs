@@ -23,6 +23,13 @@ namespace InfrasStructure.EntityFramework.Repository
 
         public string GenerateJwtToken(User user, List<String> roles)
         {
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+            var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
+            if (string.IsNullOrWhiteSpace(jwtKey))
+                throw new Exception("JWT_SECRET is missing.");
+
             // Create claims based on user details
             var claims = new List<Claim>();
 
@@ -34,12 +41,12 @@ namespace InfrasStructure.EntityFramework.Repository
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _config["JWT:Issuer"],
-                audience: _config["JWT:Audience"],
+                issuer: jwtIssuer,
+                audience: jwtAudience,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);

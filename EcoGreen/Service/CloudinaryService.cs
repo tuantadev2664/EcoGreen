@@ -11,11 +11,18 @@ namespace EcoGreen.Service
 
         public CloudinaryService(IConfiguration configuration)
         {
-            var cloudinaryAccount = new Account(
-                configuration["Cloudinary:CloudName"],
-                configuration["Cloudinary:ApiKey"],
-                configuration["Cloudinary:ApiSecret"]
-            );
+            var cloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME");
+            var apiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
+            var apiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
+
+            if (string.IsNullOrWhiteSpace(cloudName) ||
+                string.IsNullOrWhiteSpace(apiKey) ||
+                string.IsNullOrWhiteSpace(apiSecret))
+            {
+                throw new Exception("Cloudinary environment variables are not set.");
+            }
+
+            var cloudinaryAccount = new Account(cloudName, apiKey, apiSecret);
             _cloudinary = new Cloudinary(cloudinaryAccount);
         }
 
