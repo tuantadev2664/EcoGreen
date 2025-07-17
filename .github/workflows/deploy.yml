@@ -1,16 +1,32 @@
-name: Deploy to VPS
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master # ✅ Nếu bạn dùng branch khác như main, hãy đổi lại
+      - master
 
 jobs:
-  deploy:
+  ci:
+    name: 🧪 Build Docker image (CI)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy via SSH
+      - name: 📥 Checkout source code
+        uses: actions/checkout@v3
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🧪 Build Docker image for test
+        run: docker build -t ecogenz-app-test .
+
+  cd:
+    name: 🚀 Deploy to VPS (CD)
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔐 SSH into VPS and deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: 103.91.170.104
