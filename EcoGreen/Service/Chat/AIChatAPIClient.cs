@@ -9,9 +9,10 @@ namespace EcoGreen.Service.Chat
 
         public AIChatAPIClient()
         {
+            var baseUrl = Environment.GetEnvironmentVariable("OLLAMA_API") ?? "http://localhost:11434";
             _client = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:11434")
+                BaseAddress = new Uri(baseUrl)
             };
         }
 
